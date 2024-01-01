@@ -12,6 +12,11 @@ Once you have the keras model it is exported to tensorflowjs format TODO link to
 
 As the user draws into the canvas the image is periodically submitted to the server which returns the predictions.
 
+### Production concerns
+
+See https://www.tensorflow.org/js/guide/nodejs#production_considerations
+
+
 ## Conversion script
 
 tensorflowjs is very fussy about Python versions and at time of writing is broken.

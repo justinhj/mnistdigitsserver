@@ -5,15 +5,14 @@ const tf = require('@tensorflow/tfjs-node')
 const path = require('node:path')
 const AutoLoad = require('@fastify/autoload')
 
-console.log(__dirname)
-
-const model = tf.loadLayersModel('./model/digitsmodel.keras')
-
 // Pass --options via CLI arguments in command to enable these options.
 const options = {}
 
 module.exports = async function (fastify, opts) {
   // Place here your custom code!
+
+  const model = await tf.loadLayersModel('file://./model/converted/model.json');
+  console.log(model.summary());
 
   // Do not touch the following lines
 
