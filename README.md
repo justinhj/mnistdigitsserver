@@ -1,23 +1,26 @@
-# Getting Started with [Fastify-CLI](https://www.npmjs.com/package/fastify-cli)
-This project was bootstrapped with Fastify-CLI.
+# MNist digits server
 
-## Available Scripts
+## Summary
 
-In the project directory, you can run:
+This is a fastify server including web content to allow you to write mnist digits into a canvas element and have the numeric digit predicted.
 
-### `npm run dev`
+## Technical details
 
-To start the app in dev mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The model was built in tensorflow/keras using a Jupyter notebook. The notebook trains on the mnist digit data set and saves the keras model. TODO link to that repo.
 
-### `npm start`
+Once you have the keras model it is exported to tensorflowjs format TODO link to script so that it can be served via a node server and that library.
 
-For production mode
+As the user draws into the canvas the image is periodically submitted to the server which returns the predictions.
 
-### `npm run test`
+## Conversion script
 
-Run the test cases.
+tensorflowjs is very fussy about Python versions and at time of writing is broken.
+I finally got it working by installing Python 3.9 and manually applying the following change to the jaxlib python code. lmao.
 
-## Learn More
+https://github.com/tensorflow/tfjs/pull/8103/files
 
-To learn Fastify, check out the [Fastify documentation](https://www.fastify.io/docs/latest/).
+`tensorflowjs_converter --input_format keras ./model/digitsmodel.keras ./model/converted/`
+
+
+
+

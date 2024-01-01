@@ -1,7 +1,13 @@
 'use strict'
 
+const tf = require('@tensorflow/tfjs-node')
+
 const path = require('node:path')
 const AutoLoad = require('@fastify/autoload')
+
+console.log(__dirname)
+
+const model = tf.loadLayersModel('./model/digitsmodel.keras')
 
 // Pass --options via CLI arguments in command to enable these options.
 const options = {}
