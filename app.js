@@ -2,12 +2,18 @@
 
 const path = require('node:path')
 const AutoLoad = require('@fastify/autoload')
+const fastifyStatic = require('@fastify/static')
 
 // Pass --options via CLI arguments in command to enable these options.
 const options = {}
 
 module.exports = async function (fastify, opts) {
   // Place here your custom code!
+
+  fastify.register(fastifyStatic, {
+    root: path.join(__dirname, 'static'),
+    prefix: '/public/',
+  })
 
   // Do not touch the following lines
 
