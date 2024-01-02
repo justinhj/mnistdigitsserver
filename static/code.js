@@ -4,7 +4,7 @@ const SCALE = 1;
 
 // get the canvas element and its context
 let canvas = document.getElementById("mnist-canvas");
-let ctx = canvas.getContext("2d");
+let ctx = canvas.getContext("2d", {willReadFrequently: true});
 
 
 // initialize some variables to store the mouse position and state
@@ -44,7 +44,7 @@ function handleMouseMove(e) {
 }
 
 // create a function to handle the mouse up event
-function handleMouseUp(e) {
+function handleMouseUp(_e) {
   // update the mouse state
   mouseDown = false;
 }
@@ -68,7 +68,7 @@ function init() {
   canvas.height = IMAGE_HEIGHT * SCALE;
   ctx.lineWidth = SCALE;
   // set the image smoothing quality to high
-  ctx.imageSmoothingQuality = "high";
+  ctx.imageSmoothingQuality = "low";
 
   // Clear the background
   ctx.fillStyle = "white";
