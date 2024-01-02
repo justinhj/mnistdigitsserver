@@ -12,7 +12,7 @@ module.exports = async function (fastify, opts) {
   // Place here your custom code!
 
   const model = await tf.loadLayersModel('file://./model/converted/model.json');
-  console.log(model.summary());
+  model.summary();
 
   // Do not touch the following lines
 
