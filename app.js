@@ -1,7 +1,5 @@
 'use strict'
 
-const tf = require('@tensorflow/tfjs-node')
-
 const path = require('node:path')
 const AutoLoad = require('@fastify/autoload')
 
@@ -10,9 +8,6 @@ const options = {}
 
 module.exports = async function (fastify, opts) {
   // Place here your custom code!
-
-  const model = await tf.loadLayersModel('file://./model/converted/model.json');
-  model.summary();
 
   // Do not touch the following lines
 

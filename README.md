@@ -16,6 +16,11 @@ As the user draws into the canvas the image is periodically submitted to the ser
 
 See https://www.tensorflow.org/js/guide/nodejs#production_considerations
 
+### web stuff
+
+Calling post endpoint in powershell
+
+curl -Headers @{'Content-Type'  = 'application/json'} -Body '{"name":"Justin","Excitement":10}' -Method POST -Uri http://localhost:3000/predict
 
 ## Conversion script
 
