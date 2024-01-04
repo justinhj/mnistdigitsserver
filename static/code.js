@@ -6,6 +6,7 @@ const SCALE = 1;
 let canvas = document.getElementById("mnist-canvas");
 let ctx = canvas.getContext("2d", {willReadFrequently: true});
 
+let drawingChanged = false;
 
 // initialize some variables to store the mouse position and state
 let mouseX = 0;
@@ -40,6 +41,8 @@ function handleMouseMove(e) {
   if (mouseDown) {
     ctx.lineTo(mouseX, mouseY);
     ctx.stroke();
+
+    drawingChanged = true;
   }
 }
 
@@ -74,47 +77,89 @@ function init() {
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Start updating predictions periodically
-  setInterval(periodicUpdate, 1000);
+  setInterval(predict, 1200);
 }
 
 // periodic update, does a predict call and shows the pixel data for the interested user
-function periodicUpdate() {
-  const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+function predict() {
 
-  // get the pixel data array
-  const pixels = imgData.data;
+  if(drawingChanged) {
+    drawingChanged = false;
 
-  // create an empty array to store the gray scale values
-  const grayScale = [];
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-  // loop through the pixel data array
-  for (let i = 0; i < pixels.length; i += 4) {
-    // get the red, green, and blue components of the pixel
-    const r = pixels[i];
-    const g = pixels[i + 1];
-    const b = pixels[i + 2];
+    // get the pixel data array
+    const pixels = imgData.data;
 
-    // calculate the gray scale value using the luminosity formula
-    // https://en.wikipedia.org/wiki/Grayscale#Luma_coding_in_video_systems
-    const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+    // create an empty array to store the gray scale values
+    const grayScale = [];
 
-    // normalize the gray scale value to the range [0, 1]
-    // note we also flip the brightness because the mnist data expects ink to be one
-    // and paper to be zero...
-    const normalized = 1.0 - (gray / 255);
+    // loop through the pixel data array
+    for (let i = 0; i < pixels.length; i += 4) {
+      // get the red, green, and blue components of the pixel
+      const r = pixels[i];
+      const g = pixels[i + 1];
+      const b = pixels[i + 2];
 
-    // push the normalized value to the gray scale array
-    grayScale.push(normalized);
+      // calculate the gray scale value using the luminosity formula
+      // https://en.wikipedia.org/wiki/Grayscale#Luma_coding_in_video_systems
+      const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+
+      // normalize the gray scale value to the range [0, 1]
+      // note we also flip the brightness because the mnist data expects ink to be one
+      // and paper to be zero...
+      const normalized = 1.0 - (gray / 255);
+
+      // push the normalized value to the gray scale array
+      grayScale.push(normalized);
+    }
+
+    // convert the gray scale array to a JSON string
+    // const jsonString = JSON.stringify(grayScale);
+
+    let jsonString = '';
+    var row = 0;
+    while(row < 28) {
+      var col = 0;
+      while(col < 28) {
+        jsonString += `${grayScale[(28 * row) + col].toFixed (2)} `;
+        col ++;
+      }
+      jsonString += '\n';
+      row ++;
+    }
+    const textarea = document.getElementById("pixel-data");
+    textarea.value = jsonString;
+
+    // Get the anchor element by its id
+    let anchor = document.getElementById("mnist-predict");
+
+    // Use fetch to send the request
+    fetch("http://localhost:3000/predict", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: `{"tensor": ${JSON.stringify(grayScale)}}`
+    })
+      // Convert the response to JSON
+      .then((response) => response.json())
+      // Copy the output to the anchor element
+      .then((data) => {
+        let text = '';
+        var i = 0;
+        while(i < 10) {
+          text += `${i}: ${data.prediction[i].toFixed (4)}` + (i < 9 ? '\n' : '');
+          i ++;
+        }
+        anchor.textContent = text;
+      })
+      // Handle any errors
+      .catch((error) => {
+        console.error(error);
+      });
   }
-
-  // convert the gray scale array to a JSON string
-  const jsonString = JSON.stringify(grayScale);
-
-  const textarea = document.getElementById("pixel-data");
-  textarea.value = jsonString;
 } 
-
 
 window.addEventListener("load", function () {
   init();
