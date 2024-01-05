@@ -3,6 +3,9 @@
 const { test } = require('tap')
 const { build } = require('../helper')
 
+// TODO tests lol
+
+
 test('default root route', async (t) => {
   const app = await build(t)
 

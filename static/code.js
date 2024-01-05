@@ -161,6 +161,14 @@ function predict() {
   }
 } 
 
+function clearPanel() {
+  // clear the pixel data in the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawingChanged = true;
+  predict();
+}
+
+
 window.addEventListener("load", function () {
   init();
 });

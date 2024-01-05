@@ -12,7 +12,7 @@ module.exports = async function (fastify, opts) {
 
   fastify.register(fastifyStatic, {
     root: path.join(__dirname, 'static'),
-    prefix: '/public/',
+    prefix: '/',
   })
 
   // Do not touch the following lines
