@@ -82,6 +82,7 @@ function init() {
 
 // periodic update, does a predict call and shows the pixel data for the interested user
 function predict() {
+  console.log('drawing changed ' + drawingChanged);
 
   if(drawingChanged) {
     drawingChanged = false;
@@ -113,9 +114,6 @@ function predict() {
       // push the normalized value to the gray scale array
       grayScale.push(normalized);
     }
-
-    // convert the gray scale array to a JSON string
-    // const jsonString = JSON.stringify(grayScale);
 
     let jsonString = '';
     var row = 0;
@@ -163,7 +161,8 @@ function predict() {
 
 function clearPanel() {
   // clear the pixel data in the canvas
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   drawingChanged = true;
   predict();
 }
