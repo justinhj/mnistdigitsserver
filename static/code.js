@@ -71,19 +71,18 @@ function init() {
   canvas.height = IMAGE_HEIGHT * SCALE;
   ctx.lineWidth = SCALE;
   // set the image smoothing quality to high
-  ctx.imageSmoothingQuality = "low";
+  ctx.imageSmoothingQuality = "high";
 
   // Clear the background
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  // Periodically we will predict the digit if the drawing has changed
   setInterval(predict, 1200);
 }
 
 // periodic update, does a predict call and shows the pixel data for the interested user
 function predict() {
-  console.log('drawing changed ' + drawingChanged);
-
   if(drawingChanged) {
     drawingChanged = false;
 

@@ -3,11 +3,15 @@
 <head>
   <title>MNIST digits</title>
 </head>
+<link rel="stylesheet" type="text/css" href="./lestyle.css">
 <body>
   <h3>Draw a numeric digit</h3>
   <div style="display: flex;">
-    <canvas id="mnist-canvas" width="28" height="28" style="border:1px solid black;"></canvas>
-    <button id="clear-panel" onclick="clearPanel()">Clear</button>
+    <canvas id="mnist-canvas" width="28" height="28"></canvas>
+    <button id="clear-panel" onclick="clearPanel()">
+      <span aria-hidden="true">&#x2715;</span>
+      <span class="sr-only">Clear canvas</span>
+    </button>
   </div>
   <h3>Predict</h3>
   <p id="mnist-predict">?</p>
