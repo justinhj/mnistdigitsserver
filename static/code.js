@@ -116,10 +116,10 @@ function predict() {
 
     let jsonString = '';
     var row = 0;
-    while(row < 28) {
+    while(row < IMAGE_HEIGHT * SCALE) {
       var col = 0;
-      while(col < 28) {
-        jsonString += `${grayScale[(28 * row) + col].toFixed (2)} `;
+      while(col < IMAGE_WIDTH * SCALE) {
+        jsonString += `${grayScale[(IMAGE_WIDTH * row) + col].toFixed (2)} `;
         col ++;
       }
       jsonString += '\n';
