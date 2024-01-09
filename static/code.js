@@ -150,6 +150,15 @@ function predict() {
           i ++;
         }
         anchor.textContent = text;
+
+        const probabilities = data.prediction;
+
+        probabilities.forEach((probability, index) => {
+          const digitElement = document.getElementById(`digit-${index}`);
+          const newSize = Math.floor(probability * 10) + 1; // Scale probability to a size between 1 and 10
+          digitElement.style.fontSize = `${newSize}em`;
+          digitElement.style.fontWeight = newSize > 5 ? 'bold' : 'normal';
+        });
       })
       // Handle any errors
       .catch((error) => {
