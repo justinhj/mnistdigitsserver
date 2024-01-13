@@ -56,6 +56,7 @@ Then you can run the script as follows.
 
 ## Things to do
 
+0. Fix bug where mouse leaves the drawing area
 1. Drawing area should be larger so you can see the pixels better (high)
 2. Test on mobile (low)
 3. Probabilities under digits instead of alone

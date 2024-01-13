@@ -38,3 +38,12 @@
   margin: 10px;
   transition: all 0.3s ease-in-out;
 }
+
+#digitpanel {
+  display: flex;
+}
+
+.spaced {
+  margin-left: 20px;
+  margin-right: 20px;
+}

@@ -13,12 +13,23 @@ let mouseX = 0;
 let mouseY = 0;
 let mouseDown = false;
 
-// create a function to update the mouse position
+// TODO optional debug
+function showMouseData() {
+  let mxEl = document.getElementById("mouseX");
+  let myEl = document.getElementById("mouseY");
+  let mdEl = document.getElementById("mouseDown");
+
+  mxEl.innerHTML = mouseX;
+  myEl.innerHTML = mouseY;
+  mdEl.innerHTML = mouseDown.toString(); 
+}
+
 function updateMousePosition(e) {
   // get the mouse position relative to the canvas
   const rect = canvas.getBoundingClientRect();
   mouseX = e.clientX - rect.left;
   mouseY = e.clientY - rect.top;
+  showMouseData();
 }
 
 // create a function to handle the mouse down event
@@ -30,9 +41,9 @@ function handleMouseDown(e) {
   // start a new path and move to the mouse position
   ctx.beginPath();
   ctx.moveTo(mouseX, mouseY);
+  showMouseData();
 }
 
-// create a function to handle the mouse move event
 function handleMouseMove(e) {
   // update the mouse position
   updateMousePosition(e);
@@ -44,18 +55,25 @@ function handleMouseMove(e) {
 
     drawingChanged = true;
   }
+  showMouseData();
 }
 
-// create a function to handle the mouse up event
 function handleMouseUp(_e) {
-  // update the mouse state
   mouseDown = false;
+  showMouseData();
 }
 
-// add event listeners for the mouse events
+function handleMouseLeave(_e) {
+  // End drawing when the mouse leaves the canvas
+  mouseDown = false;
+  showMouseData();
+}
+
+// add event listeners for the mouse events within the canvas
 canvas.addEventListener("mousedown", handleMouseDown);
 canvas.addEventListener("mousemove", handleMouseMove);
 canvas.addEventListener("mouseup", handleMouseUp);
+canvas.addEventListener("mouseleave", handleMouseLeave);
 
 // optionally, you can also add event listeners for touch events
 // to make the canvas work on mobile devices
