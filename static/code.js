@@ -132,7 +132,7 @@ function predict() {
     let anchor = document.getElementById("mnist-predict");
 
     // Use fetch to send the request
-    fetch("http://localhost:3000/predict", {
+    fetch("predict", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
