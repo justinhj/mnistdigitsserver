@@ -54,3 +54,9 @@ Then you can run the script as follows.
 
 `tensorflowjs_converter --input_format keras ./model/digitsmodel.keras ./model/converted/`
 
+## Things to do
+
+1. Drawing area should be larger so you can see the pixels better (high)
+2. Test on mobile (low)
+3. Probabilities under digits instead of alone
+4. Pixel data can be collapsed (maybe cheat and bring in material.css)
