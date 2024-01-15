@@ -105,14 +105,10 @@ function downsampleImageData(imageData, scale) {
     const originalWidth = imageData.width;
     const originalHeight = imageData.height;
     
-    console.log(`ow ${originalWidth} oh ${originalHeight}`);
-
     const scaledWidth = Math.floor(originalWidth / scale);
     const scaledHeight = Math.floor(originalHeight / scale);
 
     const scaledData = new Uint8ClampedArray(scaledWidth * scaledHeight * 4);
-
-    console.log(`sw ${scaledWidth} sh ${scaledHeight}`);
 
     for (let y = 0; y < scaledHeight; y++) {
         for (let x = 0; x < scaledWidth; x++) {
