@@ -1,10 +1,12 @@
 const IMAGE_WIDTH = 28;
 const IMAGE_HEIGHT = 28;
-const SCALE = 1;
+const SCALE = 8;
 
 // get the canvas element and its context
 let canvas = document.getElementById("mnist-canvas");
 let ctx = canvas.getContext("2d", {willReadFrequently: true});
+ctx.scale(SCALE,SCALE);
+ctx.imageSmoothingEnabled = false;
 
 let drawingChanged = false;
 
@@ -13,7 +15,7 @@ let mouseX = 0;
 let mouseY = 0;
 let mouseDown = false;
 
-// TODO optional debug
+// TODO Should be optional since it's for debugging
 function showMouseData() {
   let mxEl = document.getElementById("mouseX");
   let myEl = document.getElementById("mouseY");
@@ -89,7 +91,7 @@ function init() {
   canvas.height = IMAGE_HEIGHT * SCALE;
   ctx.lineWidth = SCALE;
   // set the image smoothing quality to high
-  ctx.imageSmoothingQuality = "high";
+  ctx.imageSmoothingQuality = "low";
 
   // Clear the background
   ctx.fillStyle = "white";
@@ -97,6 +99,57 @@ function init() {
 
   // Periodically we will predict the digit if the drawing has changed
   setInterval(predict, 1200);
+}
+
+function downsampleImageData(imageData, scale) {
+    const originalWidth = imageData.width;
+    const originalHeight = imageData.height;
+    
+    console.log(`ow ${originalWidth} oh ${originalHeight}`);
+
+    const scaledWidth = Math.floor(originalWidth / scale);
+    const scaledHeight = Math.floor(originalHeight / scale);
+
+    const scaledData = new Uint8ClampedArray(scaledWidth * scaledHeight * 4);
+
+    console.log(`sw ${scaledWidth} sh ${scaledHeight}`);
+
+    for (let y = 0; y < scaledHeight; y++) {
+        for (let x = 0; x < scaledWidth; x++) {
+            const startX = x * scale;
+            const startY = y * scale;
+
+            let sumR = 0;
+            let sumG = 0;
+            let sumB = 0;
+            let sumA = 0;
+
+            for (let offsetY = 0; offsetY < scale; offsetY++) {
+                for (let offsetX = 0; offsetX < scale; offsetX++) {
+                    const pixelIndex = ((startY + offsetY) * originalWidth + (startX + offsetX)) * 4;
+
+                    sumR += imageData.data[pixelIndex];
+                    sumG += imageData.data[pixelIndex + 1];
+                    sumB += imageData.data[pixelIndex + 2];
+                    sumA += imageData.data[pixelIndex + 3];
+                }
+            }
+
+            const averageR = Math.round(sumR / (scale * scale));
+            const averageG = Math.round(sumG / (scale * scale));
+            const averageB = Math.round(sumB / (scale * scale));
+            const averageA = Math.round(sumA / (scale * scale));
+
+            const scaledPixelIndex = (y * scaledWidth + x) * 4;
+
+            scaledData[scaledPixelIndex] = averageR;
+            scaledData[scaledPixelIndex + 1] = averageG;
+            scaledData[scaledPixelIndex + 2] = averageB;
+            scaledData[scaledPixelIndex + 3] = averageA;
+        }
+    }
+
+    return scaledData;
 }
 
 // periodic update, does a predict call and shows the pixel data for the interested user
@@ -107,7 +160,7 @@ function predict() {
     const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
     // get the pixel data array
-    const pixels = imgData.data;
+    const pixels = downsampleImageData(imgData, SCALE);
 
     // create an empty array to store the gray scale values
     const grayScale = [];
@@ -134,9 +187,9 @@ function predict() {
 
     let jsonString = '';
     var row = 0;
-    while(row < IMAGE_HEIGHT * SCALE) {
+    while(row < IMAGE_HEIGHT) {
       var col = 0;
-      while(col < IMAGE_WIDTH * SCALE) {
+      while(col < IMAGE_WIDTH) {
         jsonString += `${grayScale[(IMAGE_WIDTH * row) + col].toFixed (2)} `;
         col ++;
       }
