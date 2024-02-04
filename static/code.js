@@ -15,23 +15,11 @@ let mouseX = 0;
 let mouseY = 0;
 let mouseDown = false;
 
-// TODO Should be optional since it's for debugging
-function showMouseData() {
-  let mxEl = document.getElementById("mouseX");
-  let myEl = document.getElementById("mouseY");
-  let mdEl = document.getElementById("mouseDown");
-
-  mxEl.innerHTML = mouseX;
-  myEl.innerHTML = mouseY;
-  mdEl.innerHTML = mouseDown.toString(); 
-}
-
 function updateMousePosition(e) {
   // get the mouse position relative to the canvas
   const rect = canvas.getBoundingClientRect();
   mouseX = e.clientX - rect.left;
   mouseY = e.clientY - rect.top;
-  showMouseData();
 }
 
 // create a function to handle the mouse down event
@@ -43,7 +31,6 @@ function handleMouseDown(e) {
   // start a new path and move to the mouse position
   ctx.beginPath();
   ctx.moveTo(mouseX, mouseY);
-  showMouseData();
 }
 
 function handleMouseMove(e) {
@@ -57,18 +44,15 @@ function handleMouseMove(e) {
 
     drawingChanged = true;
   }
-  showMouseData();
 }
 
 function handleMouseUp(_e) {
   mouseDown = false;
-  showMouseData();
 }
 
 function handleMouseLeave(_e) {
   // End drawing when the mouse leaves the canvas
   mouseDown = false;
-  showMouseData();
 }
 
 // add event listeners for the mouse events within the canvas
@@ -181,23 +165,6 @@ function predict() {
       grayScale.push(normalized);
     }
 
-    let jsonString = '';
-    var row = 0;
-    while(row < IMAGE_HEIGHT) {
-      var col = 0;
-      while(col < IMAGE_WIDTH) {
-        jsonString += `${grayScale[(IMAGE_WIDTH * row) + col].toFixed (2)} `;
-        col ++;
-      }
-      jsonString += '\n';
-      row ++;
-    }
-    const textarea = document.getElementById("pixel-data");
-    textarea.value = jsonString;
-
-    // Get the anchor element by its id
-    let anchor = document.getElementById("mnist-predict");
-
     // Use fetch to send the request
     fetch("predict", {
       method: "POST",
@@ -208,16 +175,8 @@ function predict() {
     })
       // Convert the response to JSON
       .then((response) => response.json())
-      // Copy the output to the anchor element
+      // Copy the output to the page elements
       .then((data) => {
-        let text = '';
-        var i = 0;
-        while(i < 10) {
-          text += `${i}: ${data.prediction[i].toFixed (4)}` + (i < 9 ? '\n' : '');
-          i ++;
-        }
-        anchor.textContent = text;
-
         const probabilities = data.prediction;
 
         probabilities.forEach((probability, index) => {
@@ -225,6 +184,9 @@ function predict() {
           const newSize = Math.floor(probability * 10) + 1; // Scale probability to a size between 1 and 10
           digitElement.style.fontSize = `${newSize}em`;
           digitElement.style.fontWeight = newSize > 5 ? 'bold' : 'normal';
+
+          const probabilityElement = document.getElementById(`probability-${index}`);
+          probabilityElement.textContent = probability.toFixed(4);
         });
       })
       // Handle any errors
